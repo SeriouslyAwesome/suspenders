@@ -406,6 +406,7 @@ you can deploy to staging and production with:
       copy_file "errors.rb", "config/initializers/errors.rb"
       copy_file "json_encoding.rb", "config/initializers/json_encoding.rb"
       copy_file "raygun.rb", "config/initializers/raygun.rb"
+      copy_file "Guardfile", "Guardfile"
     end
 
     def customize_error_pages
