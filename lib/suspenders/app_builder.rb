@@ -3,12 +3,12 @@ module Suspenders
     include Suspenders::Actions
 
     def readme
-      template "README.md.erb", "README.md"
+      template 'README.md.erb', 'README.md'
     end
 
     def raise_on_delivery_errors
-      replace_in_file "config/environments/development.rb",
-        "raise_delivery_errors = false", "raise_delivery_errors = true"
+      replace_in_file 'config/environments/development.rb',
+        'raise_delivery_errors = false', 'raise_delivery_errors = true'
     end
 
     def set_test_delivery_method
@@ -33,7 +33,7 @@ module Suspenders
     end
 
     def provide_dev_prime_task
-      copy_file "development_seeds.rb", "lib/tasks/development_seeds.rake"
+      copy_file 'development_seeds.rb', 'lib/tasks/development_seeds.rake'
     end
 
     def configure_generators
@@ -51,21 +51,21 @@ module Suspenders
 
       RUBY
 
-      inject_into_class "config/application.rb", "Application", config
+      inject_into_class 'config/application.rb', 'Application', config
     end
 
     def set_up_factory_girl_for_rspec
-      copy_file "factory_girl_rspec.rb", "spec/support/factory_girl.rb"
+      copy_file 'factory_girl_rspec.rb', 'spec/support/factory_girl.rb'
     end
 
     def configure_newrelic
-      template "newrelic.yml.erb", "config/newrelic.yml"
+      template 'newrelic.yml.erb', 'config/newrelic.yml'
     end
 
     def configure_smtp
-      copy_file "smtp.rb", "config/smtp.rb"
+      copy_file 'smtp.rb', 'config/smtp.rb'
 
-      prepend_file "config/environments/production.rb",
+      prepend_file 'config/environments/production.rb',
         %{require Rails.root.join("config/smtp")\n}
 
       config = <<-RUBY
@@ -74,8 +74,8 @@ module Suspenders
   config.action_mailer.smtp_settings = SMTP_SETTINGS
       RUBY
 
-      inject_into_file "config/environments/production.rb", config,
-        :after => "config.action_mailer.raise_delivery_errors = false"
+      inject_into_file 'config/environments/production.rb', config,
+        :after => 'config.action_mailer.raise_delivery_errors = false'
     end
 
     def enable_rack_canonical_host
@@ -107,24 +107,24 @@ module Suspenders
     end
 
     def setup_asset_host
-      replace_in_file "config/environments/production.rb",
-        "# config.action_controller.asset_host = "http://assets.example.com"",
-        "config.action_controller.asset_host = ENV.fetch("ASSET_HOST", ENV.fetch("HOST"))"
+      replace_in_file 'config/environments/production.rb',
+        "# config.action_controller.asset_host = 'http://assets.example.com'",
+        'config.action_controller.asset_host = ENV.fetch("ASSET_HOST", ENV.fetch("HOST"))'
 
-      replace_in_file "config/initializers/assets.rb",
-        "config.assets.version = "1.0"",
-        "config.assets.version = (ENV["ASSETS_VERSION"] || "1.0")"
+      replace_in_file 'config/initializers/assets.rb',
+        "config.assets.version = '1.0'",
+        'config.assets.version = (ENV["ASSETS_VERSION"] || "1.0")'
 
       inject_into_file(
         "config/environments/production.rb",
-        "  config.static_cache_control = "public, max-age=#{1.year.to_i}"",
+        '  config.static_cache_control = "public, max-age=#{1.year.to_i}"',
         after: serve_static_files_line
       )
     end
 
     def setup_staging_environment
-      staging_file = "config/environments/staging.rb"
-      copy_file "staging.rb", staging_file
+      staging_file = 'config/environments/staging.rb'
+      copy_file 'staging.rb', staging_file
 
       config = <<-RUBY
 
@@ -137,7 +137,7 @@ end
     end
 
     def setup_secret_token
-      template "secrets.yml", "config/secrets.yml", force: true
+      template 'secrets.yml', 'config/secrets.yml', force: true
     end
 
     def disallow_wrapping_parameters
@@ -145,7 +145,7 @@ end
     end
 
     def create_partials_directory
-      empty_directory "app/views/application"
+      empty_directory 'app/views/application'
     end
 
     def create_shared_flashes
@@ -154,31 +154,31 @@ end
     end
 
     def create_shared_javascripts
-      copy_file "_javascript.html.erb", "app/views/application/_javascript.html.erb"
+      copy_file '_javascript.html.erb', 'app/views/application/_javascript.html.erb'
     end
 
     def create_application_layout
-      template "suspenders_layout.html.erb.erb",
-        "app/views/layouts/application.html.erb",
+      template 'suspenders_layout.html.erb.erb',
+        'app/views/layouts/application.html.erb',
         force: true
     end
 
     def use_postgres_config_template
-      template "postgresql_database.yml.erb", "config/database.yml",
+      template 'postgresql_database.yml.erb', 'config/database.yml',
         force: true
     end
 
     def create_database
-      bundle_command "exec rake db:create db:migrate"
+      bundle_command 'exec rake db:create db:migrate'
     end
 
     def replace_gemfile
-      remove_file "Gemfile"
-      template "Gemfile.erb", "Gemfile"
+      remove_file 'Gemfile'
+      template 'Gemfile.erb', 'Gemfile'
     end
 
     def set_ruby_to_version_being_used
-      create_file ".ruby-version", "#{Suspenders::RUBY_VERSION}\n"
+      create_file '.ruby-version', "#{Suspenders::RUBY_VERSION}\n"
     end
 
     def setup_heroku_specific_gems
@@ -190,12 +190,12 @@ end
     end
 
     def enable_database_cleaner
-      copy_file "database_cleaner_rspec.rb", "spec/support/database_cleaner.rb"
+      copy_file 'database_cleaner_rspec.rb', 'spec/support/database_cleaner.rb'
     end
 
     def configure_spec_support_features
-      empty_directory_with_keep_file "spec/features"
-      empty_directory_with_keep_file "spec/support/features"
+      empty_directory_with_keep_file 'spec/features'
+      empty_directory_with_keep_file 'spec/support/features'
     end
 
     def configure_rspec
@@ -206,7 +206,7 @@ end
     end
 
     def configure_travis
-      template "travis.yml.erb", ".travis.yml"
+      template 'travis.yml.erb', '.travis.yml'
     end
 
     def configure_i18n_for_test_environment
@@ -224,11 +224,11 @@ end
     end
 
     def configure_background_jobs_for_rspec
-      run "rails g delayed_job:active_record"
+      run 'rails g delayed_job:active_record'
     end
 
     def configure_action_mailer_in_specs
-      copy_file "action_mailer.rb", "spec/support/action_mailer.rb"
+      copy_file 'action_mailer.rb', 'spec/support/action_mailer.rb'
     end
 
     def configure_time_formats
@@ -267,21 +267,20 @@ Rack::Timeout.timeout = (ENV["RACK_TIMEOUT"] || 10).to_i
     config.i18n.enforce_available_locales = true
       RUBY
 
-      inject_into_class "config/application.rb", "Application", config
+      inject_into_class 'config/application.rb', 'Application', config
     end
 
     def generate_rspec
-      generate "rspec:install"
-      copy_file "Guardfile", "Guardfile"
+      generate 'rspec:install'
     end
 
     def configure_unicorn
-      copy_file "unicorn.rb", "config/unicorn.rb"
+      copy_file 'unicorn.rb', 'config/unicorn.rb'
     end
 
     def setup_foreman
-      copy_file "sample.env", ".sample.env"
-      copy_file "Procfile", "Procfile"
+      copy_file 'sample.env', '.sample.env'
+      copy_file 'Procfile', 'Procfile'
     end
 
     def setup_stylesheets
@@ -295,16 +294,16 @@ Rack::Timeout.timeout = (ENV["RACK_TIMEOUT"] || 10).to_i
     end
 
     def gitignore_files
-      remove_file ".gitignore"
-      copy_file "suspenders_gitignore", ".gitignore"
+      remove_file '.gitignore'
+      copy_file 'suspenders_gitignore', '.gitignore'
       [
-        "app/views/pages",
-        "spec/lib",
-        "spec/controllers",
-        "spec/helpers",
-        "spec/support/matchers",
-        "spec/support/mixins",
-        "spec/support/shared_examples"
+        'app/views/pages',
+        'spec/lib',
+        'spec/controllers',
+        'spec/helpers',
+        'spec/support/matchers',
+        'spec/support/mixins',
+        'spec/support/shared_examples'
       ].each do |dir|
         run "mkdir #{dir}"
         run "touch #{dir}/.keep"
@@ -312,7 +311,7 @@ Rack::Timeout.timeout = (ENV["RACK_TIMEOUT"] || 10).to_i
     end
 
     def init_git
-      run "git init"
+      run 'git init'
     end
 
     def create_staging_heroku_app(flags)
@@ -338,11 +337,11 @@ Rack::Timeout.timeout = (ENV["RACK_TIMEOUT"] || 10).to_i
       remotes = <<-SHELL
 
 # Set up the staging and production apps.
-#{join_heroku_app("staging")}
-#{join_heroku_app("production")}
+#{join_heroku_app('staging')}
+#{join_heroku_app('production')}
       SHELL
 
-      append_file "bin/setup", remotes
+      append_file 'bin/setup', remotes
     end
 
     def join_heroku_app(environment)
@@ -350,9 +349,9 @@ Rack::Timeout.timeout = (ENV["RACK_TIMEOUT"] || 10).to_i
       <<-SHELL
 if heroku join --app #{heroku_app_name} &> /dev/null; then
   git remote add #{environment} git@heroku.com:#{heroku_app_name}.git || true
-  printf "You are a collaborator on the "#{heroku_app_name}" Heroku app\n"
+  printf 'You are a collaborator on the "#{heroku_app_name}" Heroku app\n'
 else
-  printf "Ask for access to the "#{heroku_app_name}" Heroku app\n"
+  printf 'Ask for access to the "#{heroku_app_name}" Heroku app\n'
 fi
       SHELL
     end
@@ -393,8 +392,8 @@ you can deploy to staging and production with:
     end
 
     def setup_segment
-      copy_file "_analytics.html.erb",
-        "app/views/application/_analytics.html.erb"
+      copy_file '_analytics.html.erb',
+        'app/views/application/_analytics.html.erb'
     end
 
     def setup_bundler_audit
@@ -418,22 +417,22 @@ you can deploy to staging and production with:
 
       %w(500 404 422).each do |page|
         inject_into_file "public/#{page}.html", meta_tags, :after => "<head>\n"
-        replace_in_file "public/#{page}.html", /<!--.+-->\n/, ""
+        replace_in_file "public/#{page}.html", /<!--.+-->\n/, ''
       end
     end
 
     def remove_routes_comment_lines
-      replace_in_file "config/routes.rb",
+      replace_in_file 'config/routes.rb',
         /Rails\.application\.routes\.draw do.*end/m,
         "Rails.application.routes.draw do\nend"
     end
 
     def disable_xml_params
-      copy_file "disable_xml_params.rb", "config/initializers/disable_xml_params.rb"
+      copy_file 'disable_xml_params.rb', 'config/initializers/disable_xml_params.rb'
     end
 
     def setup_default_rake_task
-      append_file "Rakefile" do
+      append_file 'Rakefile' do
         <<-EOS
 task(:default).clear
 task default: [:spec]
@@ -451,14 +450,14 @@ end
     private
 
     def raise_on_missing_translations_in(environment)
-      config = "config.action_view.raise_on_missing_translations = true"
+      config = 'config.action_view.raise_on_missing_translations = true'
 
       uncomment_lines("config/environments/#{environment}.rb", config)
     end
 
     def override_path_for_tests
-      if ENV["TESTING"]
-        support_bin = File.expand_path(File.join("..", "..", "spec", "fakes", "bin"))
+      if ENV['TESTING']
+        support_bin = File.expand_path(File.join('..', '..', 'spec', 'fakes', 'bin'))
         "PATH=#{support_bin}:$PATH"
       end
     end
@@ -477,7 +476,7 @@ end
     end
 
     def serve_static_files_line
-      "config.serve_static_files = ENV["RAILS_SERVE_STATIC_FILES"].present?\n"
+      "config.serve_static_files = ENV['RAILS_SERVE_STATIC_FILES'].present?\n"
     end
 
     def heroku_app_name_for(environment)
